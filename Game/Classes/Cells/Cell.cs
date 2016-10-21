@@ -9,15 +9,15 @@ namespace Game.Classes.Cells
 {
     abstract class Cell
     {
-        protected Size size;
-        protected Point Location { get; set; }
+        public Size Size { get; }
+        public Point Location { get; set; }
 
-        public Cell(int x, int y)
+        public Cell(Point p, Size s)
         {
-            size = new Size(48, 48);
-            Location = new Point(x * size.Width, y * size.Height);
+            Location = p;
+            Size = s;
         }
 
-        public abstract void DrawCell(Graphics g);
+        public abstract void DrawCell(Graphics g, int nr);
     }
 }

@@ -19,34 +19,23 @@ namespace Forms
         {
             InitializeComponent();
         }
-
-        private void btnStartGame_Click(object sender, EventArgs e)
+        private void ShowGameForm(GameForm gForm)
         {
-            GameForm gForm = new GameForm(world.map);
             Hide();
             gForm.ShowDialog();
 
-            if(gForm.DialogResult == DialogResult.OK)
+            if (gForm.DialogResult == DialogResult.OK)
             {
                 this.Show();
                 gForm = null;
+                world = new World();
             }
         }
 
-        private void MenuForm_Load(object sender, EventArgs e)
+        private void btnStartGame_Click(object sender, EventArgs e)
         {
-        }
-
-        private void btnMapCreator_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void btnOptions_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void btnInstructions_Click(object sender, EventArgs e)
-        {
+            GameForm gForm = new GameForm(world);
+            ShowGameForm(gForm);
         }
 
         private void MenuForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -57,6 +46,12 @@ namespace Forms
         private void btnQuitGame_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void btnCreateMap_Click(object sender, EventArgs e)
+        {
+            GameForm gForm = new GameForm(world, true);
+            ShowGameForm(gForm);
         }
     }
 }

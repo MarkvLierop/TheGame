@@ -124,9 +124,9 @@
     <value>150, 17</value>
   </metadata>
   <metadata name="tmrPUInvisible.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>237, 17</value>
+    <value>307, 20</value>
   </metadata>
   <metadata name="tmrPUInvulnerable.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>367, 17</value>
+    <value>446, 26</value>
   </metadata>
 </root>

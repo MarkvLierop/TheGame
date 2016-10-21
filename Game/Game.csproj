@@ -55,7 +55,7 @@
     <Compile Include="Classes\PowerUps\PowerUp.cs" />
     <Compile Include="Classes\PowerUps\PUInvisible.cs" />
     <Compile Include="Classes\PowerUps\PUInvulnerable.cs" />
-    <Compile Include="Classes\PowerUps\PUSpeed.cs" />
+    <Compile Include="Classes\PowerUps\PUHealth.cs" />
     <Compile Include="Classes\Cells\WallCell.cs" />
     <Compile Include="Classes\World.cs" />
     <Compile Include="Forms\GameForm.cs">

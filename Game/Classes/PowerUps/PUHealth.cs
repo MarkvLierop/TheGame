@@ -7,17 +7,16 @@ using System.Threading.Tasks;
 
 namespace Game.Classes
 {
-    class PUInvisible : PowerUp
+    class PUHealth : PowerUp
     {
-        public PUInvisible(World world) 
-            :  base(world)
+        public PUHealth(World world) :base(world)
         {
-            Effect = "Invisible";
+            Effect = "Health";
         }
 
         public override void DrawPowerUp(Graphics g)
         {
-            g.FillEllipse(Brushes.White, new Rectangle(Cell.Location, Cell.Size));
+            g.FillEllipse(Brushes.DarkRed, new Rectangle(Cell.Location, Cell.Size));
         }
     }
 }
