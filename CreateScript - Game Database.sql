@@ -1,0 +1,17 @@
+CREATE DATABASE [Game] ON  PRIMARY 
+	( NAME = N'Game_Data', FILENAME = N'E:\School\SE Jaar1\SE\Game\Game_Data.mdf' , SIZE = 167872KB , MAXSIZE = UNLIMITED, FILEGROWTH = 16384KB )
+ LOG ON 
+	( NAME = N'Game_LOG', FILENAME = N'E:\School\SE Jaar1\SE\Game\Game_LOG.ldf' , SIZE = 2048KB , MAXSIZE = 2048GB , FILEGROWTH = 16384KB )
+GO
+
+USE [Game]
+GO
+
+CREATE TABLE Cell
+( 
+	ID INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+	MapName VARCHAR(50),
+	Coordinaten VARCHAR(50),
+	NormalCell bit,
+	WallCell bit
+);

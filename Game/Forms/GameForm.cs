@@ -23,7 +23,7 @@ namespace Game
         private bool createMap;
         private bool gameWon;
         private bool gameLost;
-        private int powerUpTimeCounter = 0;
+        private int powerUpTimeCounter = 10;
 
         // Voor Map creator
         public GameForm(World world, bool createMap)
@@ -285,10 +285,10 @@ namespace Game
         // Timer die bijhoudt hoe lang powerup active mag blijven.
         private void tmrPowerUp_Tick(object sender, EventArgs e)
         {
-            powerUpTimeCounter++;
+            powerUpTimeCounter--;
 
             lblPowerUpTimer.Text = "PowerUpTimer:\n"+ powerUpTimeCounter.ToString();
-            if(powerUpTimeCounter == 10)
+            if(powerUpTimeCounter == 0)
             {
                 lblPowerUp.Text = "PowerUp:";
                 lblPowerUpTimer.Text = "PowerUpTimer:";
