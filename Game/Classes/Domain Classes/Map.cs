@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game.Classes.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -15,18 +16,18 @@ namespace Game.Classes
         private Cells.Cell Cell;
         private int cellXAxisRowCount;
         private int cellYAxisRowCount;
-        private Size cellSize;
         private List<PowerUp> powerUpList;
 
-        public Cells.Cell[,] CellArray { get; }
-        public List<PowerUp> PowerUpsOnMapList { get; }
+        public Cells.Cell[,] CellArray { get; private set; }
+        public Size CellSize { get; private set; }
+        public List<PowerUp> PowerUpsOnMapList { get; private set; }
         public Map(World world)
         {
             this.world = world;
 
             cellXAxisRowCount = 27;
             cellYAxisRowCount = 16;
-            cellSize = new Size(30, 30);
+            CellSize = new Size(30, 30);
             CellArray = new Cells.Cell[cellXAxisRowCount, cellYAxisRowCount];
 
             PowerUpsOnMapList = new List<PowerUp>();
@@ -37,9 +38,26 @@ namespace Game.Classes
             {
                 for (int y = 0;y < cellYAxisRowCount;y++)
                 {
-                    Cell = new NormalCell(new Point(x * cellSize.Width, y * cellSize.Height), cellSize);
+                    Cell = new NormalCell(new Point(x * CellSize.Width, y * CellSize.Height), CellSize);
                     CellArray[x, y] = Cell;
                 }
+            }
+        }
+        public void CreateMapFromDatabase()
+        {
+            MapRepository maprepo = new MapRepository(new Persistencies.MSSQL_Server());
+
+            string randomMap = maprepo.GetRandomMapName();
+            List<NormalCell> normalcellList = maprepo.GetNormalCells(randomMap, CellSize);
+            for (int i = 0; i< normalcellList.Count;i++)
+            {
+                CellArray[normalcellList[i].Location.X / CellSize.Width, normalcellList[i].Location.Y / CellSize.Height] = normalcellList[i];
+            }
+
+            List<WallCell> wallcellList = maprepo.GetWallCells(randomMap, CellSize);
+            for(int i = 0;i < wallcellList.Count;i++)
+            {
+                CellArray[wallcellList[i].Location.X / CellSize.Width, wallcellList[i].Location.Y / CellSize.Height] = wallcellList[i];
             }
         }
         public void CreateMapFromFile()
@@ -52,7 +70,7 @@ namespace Game.Classes
                 System.IO.StreamReader srNormalCells = new System.IO.StreamReader(randomMap + @"\NormalCellList.txt");
                 while ((line = srNormalCells.ReadLine()) != null)
                 {
-                    Cell = new NormalCell(ConvertLineToPoint(line), cellSize);
+                    Cell = new NormalCell(ConvertLineToPoint(line), CellSize);
                     AddCellToCellArray(line);
                 }
                 srNormalCells.Close();
@@ -61,13 +79,14 @@ namespace Game.Classes
                 System.IO.StreamReader srWallCells = new System.IO.StreamReader(randomMap + @"\WallCellList.txt");
                 while ((line = srWallCells.ReadLine()) != null)
                 {
-                    Cell = new WallCell(ConvertLineToPoint(line), cellSize);
+                    Cell = new WallCell(ConvertLineToPoint(line), CellSize);
                     AddCellToCellArray(line);
                 }
                 srWallCells.Close();
             }
-            catch
+            catch (FileNotFoundException e)
             {
+                throw new Exceptions.CreateMapException(e.Message);
             }
 
             SpawnPowerUps();
@@ -82,7 +101,7 @@ namespace Game.Classes
         // Punt uit bestand toevoegen aan de array van Cells.
         private void AddCellToCellArray(string line)
         {
-            CellArray[ConvertLineToPoint(line).X / cellSize.Width, ConvertLineToPoint(line).Y / cellSize.Height] = Cell;
+            CellArray[ConvertLineToPoint(line).X / CellSize.Width, ConvertLineToPoint(line).Y / CellSize.Height] = Cell;
         }
 
         private void SpawnPowerUps()
@@ -97,17 +116,25 @@ namespace Game.Classes
                 PowerUpsOnMapList.Add(powerUpList[randomPowerUp]);
             }
         }
+
         // Willekeurige map selecteren in de Debug directory
         private string GetRandomMapName()
         {
-            Random Rand = new Random();
-            string RandomMap;
-            string[] Path = Directory.GetDirectories(Directory.GetCurrentDirectory());
-            RandomMap = Path[Rand.Next(Path.Count())];
-            return RandomMap;
+            try
+            {
+                Random Rand = new Random();
+                string RandomMap;
+                string[] Path = Directory.GetDirectories(Directory.GetCurrentDirectory());
+                RandomMap = Path[Rand.Next(Path.Count())];
+                return RandomMap;
+            }
+            catch(Exception e)
+            {
+                throw new Exceptions.NoMapFoundException(e.Message);
+            }
         }
 
-        // Bestandinhoud splitten van [X = 48, Y = 0] naar 48, 0.
+        // Bestandinhoud splitten van [X = 48, Y = 0] naar 48 & 0.
         private Point ConvertLineToPoint(string line)
         {
             string[] Punt = line.Split(',');

@@ -1,10 +1,12 @@
 ﻿using Game.Classes;
 using Game.Classes.Cells;
+using Game.Classes.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,12 +29,11 @@ namespace Game
             this.world = world;
             this.createMap = createMap;
 
-            world.map = new Map(world);
-            world.map.CreateBlankMap();
+            world.CreateBlankMap();
 
             btnSave.Visible = true;
             txtMapName.Visible = true;
-            foreach (Cell c in world.map.CellArray)
+            foreach (Cell c in world.Map.CellArray)
             {
                 PictureBox p = new PictureBox();
                 p.Location = c.Location;
@@ -48,24 +49,31 @@ namespace Game
             InitializeComponent();
             this.world = world;
 
-            world.map = new Map(world);
-            world.map.CreateMapFromFile();
-            world.player = new Player(world);            
+            try
+            {
+                world.CreateMapFromFile();
+            }
+            catch (CreateMapException e)
+            {
+                MessageBox.Show(e.Message);
+                Application.Exit();
+            }
+            world.SpawnPlayer();         
             world.SpawnEnemies();
 
             tmrGameTimer.Enabled = true;
-            lblHealth.Text = "Health Points: " +world.player.HealthPoints.ToString();
-            lblPoints.Text = "Points: " + world.player.Points.ToString();  
+            lblHealth.Text = "Health Points: " +world.Player.HealthPoints.ToString();
+            lblPoints.Text = "Points: " + world.Player.Points.ToString();  
         }
         // MouseDown event voor Map creator. 
         private void p_MouseDown(object sender, MouseEventArgs e)
         {
             PictureBox p = (PictureBox)sender;
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Right)
             {
                 p.BackColor = Color.Blue;
             }
-            if (e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Left)
             {
                 p.BackColor = Color.Black;
             }
@@ -85,31 +93,37 @@ namespace Game
             Graphics g = e.Graphics;
 
             int count = 0;
+            // Alleen uitvoeren als de gebruiker niet in de create map mode zit
             if(!createMap)
             {
-                foreach (Cell c in world.map.CellArray)
+                // Cells tekenen
+                foreach (Cell c in world.Map.CellArray)
                 {
                     c.DrawCell(g, count);
                     count++;
                 }
-                foreach (PowerUp p in world.map.PowerUpsOnMapList)
+                // Powerups tekenen
+                foreach (PowerUp p in world.Map.PowerUpsOnMapList)
                 {
                     p.DrawPowerUp(g);
                 }
-
-                foreach (Enemy enemy in world.enemyList)
+                // Enemies tekenen
+                foreach (Enemy enemy in world.EnemyList)
                 {
                     enemy.DrawEntity(g);
                 }
-                world.player.DrawEntity(g);
+                // Player tekenen
+                world.Player.DrawEntity(g);
 
+                // Game over tekenen
                 if (gameLost)
                 {
-                    world.map.DrawEndGameText(g, pbGameField.Width, pbGameField.Height, false);
+                    world.Map.DrawEndGameText(g, pbGameField.Width, pbGameField.Height, false);
                 }
+                // Game won tekenen
                 if (gameWon)
                 {
-                    world.map.DrawEndGameText(g, pbGameField.Width, pbGameField.Height, true);
+                    world.Map.DrawEndGameText(g, pbGameField.Width, pbGameField.Height, true);
                 }
             }
         }
@@ -120,42 +134,7 @@ namespace Game
             {
                 try
                 {
-                    // Mapnaam toevoegen aan lijst met mapnamen.
-                    using (System.IO.TextWriter swMapName = new System.IO.StreamWriter("MapNameList.txt", true))
-                    {
-                        swMapName.WriteLine(txtMapName.Text);
-                        swMapName.Close();
-                    }
-
-                    // Create Subfolder met ingegeven naam
-                    System.IO.Directory.CreateDirectory(txtMapName.Text);
-
-
-                    // Opslaan van WallCells in bestand
-                    using (System.IO.TextWriter swSaveCells = new System.IO.StreamWriter(txtMapName.Text + @"\WallCellList.txt"))
-                    {
-                        foreach (PictureBox pb in pbGameField.Controls)
-                        {
-                            if (pb.BackColor == Color.Black)
-                            {
-                                swSaveCells.WriteLine(pb.Location);
-                            }
-                        }
-                        swSaveCells.Close();
-                    }
-
-                    // Opslaan van Normallcells in bestand
-                    using (System.IO.TextWriter swSaveCells = new System.IO.StreamWriter(txtMapName.Text + @"\NormalCellList.txt"))
-                    {
-                        foreach (PictureBox pb in pbGameField.Controls)
-                        {
-                            if (pb.BackColor == Color.Blue)
-                            {
-                                swSaveCells.WriteLine(pb.Location);
-                            }
-                        }
-                        swSaveCells.Close();
-                    }
+                    SaveMapToFile();   
                     MessageBox.Show("Map opgeslagen.");
                 }
                 catch
@@ -167,38 +146,86 @@ namespace Game
         
         private void GameForm_KeyDown(object sender, KeyEventArgs e)
         {
-            world.player.MovePlayer(e.KeyCode);
+            // Speler bewegen
+            world.Player.MovePlayer(e.KeyCode);
             Refresh();
         }
 
         private void tmrGameTimer_Tick(object sender, EventArgs e)
         {
             Random rand = new Random();
-            foreach (Enemy enemy in world.enemyList)
+            // Enemies bewegen
+            foreach (Enemy enemy in world.EnemyList)
             {
                 enemy.MoveEnemy(rand);
             }
-            if (world.player.CheckForDamage())
+            // Kijken of een enemy een speler raakt
+            if (world.Player.CheckForDamage())
             {
-                lblHealth.Text = "Health Points: " + world.player.HealthPoints.ToString();
-                if (world.player.CheckIfGameOver())
+                lblHealth.Text = "Health Points: " + world.Player.HealthPoints.ToString();
+                if (world.Player.CheckIfGameOver())
                 {
                     gameLost = true;
                     EndGame();
                 }
             }
-            if (world.player.CheckIfGameWon())
+            // Checken of het spel gewonnen is
+            if (world.Player.CheckIfGameWon())
             {
-                lblPoints.Text = "Points: " + world.player.Points.ToString();
+                lblPoints.Text = "Points: " + world.Player.Points.ToString();
                 gameWon = true;
                 EndGame();
             }
             Refresh();
         }
+        // Gametimer & eventhandler voor keypress stoppen
         private void EndGame()
         {
             this.KeyDown -= new System.Windows.Forms.KeyEventHandler(this.GameForm_KeyDown);
             tmrGameTimer.Enabled = false;
+        }
+        private void SaveMapToFile()
+        {
+            DirectoryInfo newDir = new DirectoryInfo(txtMapName.Text);
+
+            if (newDir.Exists)
+            {
+                MessageBox.Show("Map already exists.");
+            }
+            else
+            {
+                newDir.Create();
+
+                // Opslaan van WallCells in bestand
+                using (System.IO.TextWriter swSaveCells = new System.IO.StreamWriter(txtMapName.Text + @"\WallCellList.txt"))
+                {
+                    foreach (PictureBox pb in pbGameField.Controls)
+                    {
+                        if (pb.BackColor == Color.Black)
+                        {
+                            swSaveCells.WriteLine(pb.Location);
+                        }
+                    }
+                    swSaveCells.Close();
+                }
+
+                // Opslaan van Normallcells in bestand
+                using (System.IO.TextWriter swSaveCells = new System.IO.StreamWriter(txtMapName.Text + @"\NormalCellList.txt"))
+                {
+                    foreach (PictureBox pb in pbGameField.Controls)
+                    {
+                        if (pb.BackColor == Color.Blue)
+                        {
+                            swSaveCells.WriteLine(pb.Location);
+                        }
+                    }
+                    swSaveCells.Close();
+                }
+            }
+        }
+        private void SaveMapToDatabase()
+        {
+
         }
     }
 }

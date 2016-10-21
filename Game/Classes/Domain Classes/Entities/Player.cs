@@ -18,7 +18,7 @@ namespace Game.Classes
         {
             this.world = world;
 
-            Cell = world.map.CellArray[0, 0];
+            Cell = world.Map.CellArray[0, 0];
             HealthPoints = 4;
             Points = 0;
         }
@@ -30,7 +30,7 @@ namespace Game.Classes
                 case Keys.Up:
                     if ((y - 1) >= 0)
                     {
-                        if (world.map.CellArray[x, y - 1].GetType() == typeof(WallCell))
+                        if (world.Map.CellArray[x, y - 1].GetType() == typeof(WallCell))
                             return false;
                     }
                     else
@@ -39,9 +39,9 @@ namespace Game.Classes
                     }
                     break;
                 case Keys.Down:
-                    if (y + 1 != world.map.CellArray.GetLength(1))
+                    if (y + 1 != world.Map.CellArray.GetLength(1))
                     {
-                        if (world.map.CellArray[x, y + 1].GetType() == typeof(WallCell))
+                        if (world.Map.CellArray[x, y + 1].GetType() == typeof(WallCell))
                             return false;
                     }
                     else
@@ -50,9 +50,9 @@ namespace Game.Classes
                     }
                     break;
                 case Keys.Right:
-                    if (x + 1 != world.map.CellArray.GetLength(0))
+                    if (x + 1 != world.Map.CellArray.GetLength(0))
                     {
-                        if (world.map.CellArray[x + 1, y].GetType() == typeof(WallCell))
+                        if (world.Map.CellArray[x + 1, y].GetType() == typeof(WallCell))
                             return false;
                     }
                     else
@@ -63,7 +63,7 @@ namespace Game.Classes
                 case Keys.Left:
                     if ((x - 1) >= 0)
                     {
-                        if (world.map.CellArray[x - 1, y].GetType() == typeof(WallCell))
+                        if (world.Map.CellArray[x - 1, y].GetType() == typeof(WallCell))
                             return false;
                     }
                     else
@@ -86,16 +86,16 @@ namespace Game.Classes
                 switch (pressedKey)
                 {
                     case Keys.Up:
-                        Cell = world.map.CellArray[x, y - 1];
+                        Cell = world.Map.CellArray[x, y - 1];
                         break;
                     case Keys.Down:
-                        Cell = world.map.CellArray[x, y + 1];
+                        Cell = world.Map.CellArray[x, y + 1];
                         break;
                     case Keys.Right:
-                        Cell = world.map.CellArray[x + 1, y];
+                        Cell = world.Map.CellArray[x + 1, y];
                         break;
                     case Keys.Left:
-                        Cell = world.map.CellArray[x - 1, y];
+                        Cell = world.Map.CellArray[x - 1, y];
                         break;
                 }
             }
@@ -103,8 +103,9 @@ namespace Game.Classes
         
         public bool CheckForDamage()
         {
-            foreach (Enemy e in world.enemyList)
+            foreach (Enemy e in world.EnemyList)
             {
+                // Kijken of de speler zich op dezelfde cell bevindt als een enemy
                 if (Cell == e.Cell)
                 {
                     HealthPoints -= 1;
@@ -116,7 +117,7 @@ namespace Game.Classes
 
         public bool CheckIfGameWon()
         {
-            if (Cell == world.map.CellArray[world.map.CellArray.GetLength(0)-1, world.map.CellArray.GetLength(1)-1])
+            if (Cell == world.Map.CellArray[world.Map.CellArray.GetLength(0)-1, world.Map.CellArray.GetLength(1)-1])
             {
                 Points++;
                 return true;
@@ -135,7 +136,7 @@ namespace Game.Classes
 
         public override void DrawEntity(Graphics g)
         {
-            g.FillEllipse(Brushes.Green, new Rectangle(Cell.Location, world.map.CellArray[0, 0].Size));
+            g.FillEllipse(Brushes.Green, new Rectangle(Cell.Location, world.Map.CellArray[0, 0].Size));
         }
 
     }

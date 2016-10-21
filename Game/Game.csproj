@@ -46,18 +46,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Cells\Cell.cs" />
-    <Compile Include="Classes\Cells\NormalCell.cs" />
-    <Compile Include="Classes\Entities\Enemy.cs" />
-    <Compile Include="Classes\Entities\Entity.cs" />
-    <Compile Include="Classes\Map.cs" />
-    <Compile Include="Classes\Entities\Player.cs" />
-    <Compile Include="Classes\PowerUps\PowerUp.cs" />
-    <Compile Include="Classes\PowerUps\PUInvisible.cs" />
-    <Compile Include="Classes\PowerUps\PUInvulnerable.cs" />
-    <Compile Include="Classes\PowerUps\PUHealth.cs" />
-    <Compile Include="Classes\Cells\WallCell.cs" />
-    <Compile Include="Classes\World.cs" />
+    <Compile Include="Classes\Domain Classes\Cells\Cell.cs" />
+    <Compile Include="Classes\Domain Classes\Cells\NormalCell.cs" />
+    <Compile Include="Classes\Domain Classes\Entities\Enemy.cs" />
+    <Compile Include="Classes\Domain Classes\Entities\Entity.cs" />
+    <Compile Include="Classes\Domain Classes\Map.cs" />
+    <Compile Include="Classes\Domain Classes\Entities\Player.cs" />
+    <Compile Include="Classes\Domain Classes\PowerUps\PowerUp.cs" />
+    <Compile Include="Classes\Domain Classes\PowerUps\PUInvisible.cs" />
+    <Compile Include="Classes\Domain Classes\PowerUps\PUInvulnerable.cs" />
+    <Compile Include="Classes\Domain Classes\PowerUps\PUHealth.cs" />
+    <Compile Include="Classes\Domain Classes\Cells\WallCell.cs" />
+    <Compile Include="Classes\Domain Classes\World.cs" />
+    <Compile Include="Classes\Exceptions\CreateMapException.cs" />
+    <Compile Include="Classes\Exceptions\NoMapFoundException.cs" />
+    <Compile Include="Classes\Exceptions\SaveMapException.cs" />
+    <Compile Include="Classes\Interfaces\IMap.cs" />
+    <Compile Include="Classes\Persistencies\MSSQL-Server.cs" />
+    <Compile Include="Classes\Repositories\MapRepository.cs" />
     <Compile Include="Forms\GameForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +106,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

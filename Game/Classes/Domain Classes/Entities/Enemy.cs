@@ -25,31 +25,31 @@ namespace Game.Classes
             GetPosition();
 
             // Enemy verplaatsen
-            switch (CheckForNearbyWalls(rand))
+            switch (CheckForWalls(rand))
             {
                 case 0:
                     // Up
-                    Cell = world.map.CellArray[x, y - 1];
+                    Cell = world.Map.CellArray[x, y - 1];
                     break;
                 case 1:
                     // Down
-                    Cell = world.map.CellArray[x, y + 1];
+                    Cell = world.Map.CellArray[x, y + 1];
                     break;
                 case 2:
                     // Right
-                    Cell = world.map.CellArray[x + 1, y];
+                    Cell = world.Map.CellArray[x + 1, y];
                     break;
                 case 3:
                     // Left
-                    Cell = world.map.CellArray[x - 1, y];
+                    Cell = world.Map.CellArray[x - 1, y];
                     break;
             }
         }
         public override void DrawEntity(Graphics g)
         {
-            g.FillEllipse(Brushes.Red, new Rectangle(Cell.Location, world.map.CellArray[0, 0].Size));
+            g.FillEllipse(Brushes.Red, new Rectangle(Cell.Location, world.Map.CellArray[0, 0].Size));
         }
-        private int CheckForNearbyWalls(Random rand)
+        private int CheckForWalls(Random rand)
         {
             // Checken of enemy naar de player mag bewegen.
             if (!mogelijkeRichtingen.Contains(LookForPlayer(mogelijkeRichtingen[rand.Next(0, mogelijkeRichtingen.Count)])))
@@ -70,7 +70,8 @@ namespace Game.Classes
                     // Up
                     if ((y - 1) >= 0)
                     {
-                        if (world.map.CellArray[x, y - 1].GetType() == typeof(WallCell))
+                        // Kijken of er een wall boven is. Zo ja, dan up als mogelijke richting verwijderen
+                        if (world.Map.CellArray[x, y - 1].GetType() == typeof(WallCell))
                             goto case 4;
                     }
                     else
@@ -81,9 +82,9 @@ namespace Game.Classes
                     break;
                 case 1:
                     // Down
-                    if (y + 1 != world.map.CellArray.GetLength(1))
+                    if (y + 1 != world.Map.CellArray.GetLength(1))
                     {
-                        if (world.map.CellArray[x, y + 1].GetType() == typeof(WallCell))
+                        if (world.Map.CellArray[x, y + 1].GetType() == typeof(WallCell))
                             goto case 4;
                     }
                     else
@@ -94,9 +95,9 @@ namespace Game.Classes
                     break;
                 case 2:
                     // Right
-                    if (x + 1 != world.map.CellArray.GetLength(0))
+                    if (x + 1 != world.Map.CellArray.GetLength(0))
                     {
-                        if (world.map.CellArray[x + 1, y].GetType() == typeof(WallCell))
+                        if (world.Map.CellArray[x + 1, y].GetType() == typeof(WallCell))
                             goto case 4;
                     }
                     else
@@ -109,7 +110,7 @@ namespace Game.Classes
                     // Left
                     if ((x - 1) >= 0)
                     {
-                        if (world.map.CellArray[x - 1, y].GetType() == typeof(WallCell))
+                        if (world.Map.CellArray[x - 1, y].GetType() == typeof(WallCell))
                             goto case 4;
                     }
                     else
@@ -120,7 +121,7 @@ namespace Game.Classes
                     break;
                 case 4:
                     mogelijkeRichtingen.Remove(richting);
-                    CheckForNearbyWalls(rand);
+                    CheckForWalls(rand);
                     break;
             }
             RefillList();
@@ -140,26 +141,26 @@ namespace Game.Classes
             {
                 for (int y= 0; y < distanceToPlayer; y++)
                 {
-                        if (base.x + x < world.map.CellArray.GetLength(0) && 
-                            world.map.CellArray[base.x + x, base.y] == world.player.Cell)
+                        if (base.x + x < world.Map.CellArray.GetLength(0) && 
+                            world.Map.CellArray[base.x + x, base.y] == world.Player.Cell)
                         {
                             // Rechts opgaan als daar de speler bevindt
                             return 2;
                         }
                         if (base.x - x >= 0 && 
-                            world.map.CellArray[base.x - x, base.y] == world.player.Cell)
+                            world.Map.CellArray[base.x - x, base.y] == world.Player.Cell)
                         {
                             // Links
                             return 3;
                         }
-                        if (base.y + y < world.map.CellArray.GetLength(1) && 
-                            world.map.CellArray[base.x, base.y + y] == world.player.Cell)
+                        if (base.y + y < world.Map.CellArray.GetLength(1) && 
+                            world.Map.CellArray[base.x, base.y + y] == world.Player.Cell)
                         {
                             // Down
                             return 1;
                         }
                         if (base.y - y >= 0 && 
-                            world.map.CellArray[base.x, base.y - y] == world.player.Cell)
+                            world.Map.CellArray[base.x, base.y - y] == world.Player.Cell)
                         {
                             // Up
                             return 0;
