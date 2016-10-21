@@ -21,15 +21,15 @@ namespace Game.Classes
         
         protected void GetPosition()
         {
-            x = world.Map.CellArray.GetLength(0); // width
-            y = world.Map.CellArray.GetLength(1); // height
+            x = world.GetMapCellArray().GetLength(0); // width
+            y = world.GetMapCellArray().GetLength(1); // height
 
             // Positie opvragen van de speler in de CellArray.
             for (int Xaxis = 0; Xaxis < x; Xaxis++)
             {
                 for (int Yaxis = 0; Yaxis < y; Yaxis++)
                 {
-                    if (world.Map.CellArray[Xaxis, Yaxis] == LocationOnCell)
+                    if (world.GetMapCellArray()[Xaxis, Yaxis] == LocationOnCell)
                     {
                         x = Xaxis;
                         y = Yaxis;

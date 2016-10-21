@@ -22,7 +22,7 @@ namespace UnitTestProject
                     if (map.CellArray[x,y] == player.LocationOnCell)
                     {
                         player.MovePlayer(System.Windows.Forms.Keys.Right);
-                        Assert.AreEqual(map.CellArray[0, 0], map.CellArray[1,0]);
+                        Assert.AreEqual(map.CellArray[0, 0], player.LocationOnCell);
                     }
                 }
             }

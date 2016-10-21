@@ -37,6 +37,8 @@
             this.lblHealth = new System.Windows.Forms.Label();
             this.lblPoints = new System.Windows.Forms.Label();
             this.btnSaveToDatabase = new System.Windows.Forms.Button();
+            this.lblPowerUp = new System.Windows.Forms.Label();
+            this.lblPowerUpTimer = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pbGameField)).BeginInit();
             this.SuspendLayout();
             // 
@@ -109,11 +111,33 @@
             this.btnSaveToDatabase.Visible = false;
             this.btnSaveToDatabase.Click += new System.EventHandler(this.btnSaveToDatabase_Click);
             // 
+            // lblPowerUp
+            // 
+            this.lblPowerUp.AutoSize = true;
+            this.lblPowerUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.lblPowerUp.Location = new System.Drawing.Point(839, 127);
+            this.lblPowerUp.Name = "lblPowerUp";
+            this.lblPowerUp.Size = new System.Drawing.Size(93, 24);
+            this.lblPowerUp.TabIndex = 6;
+            this.lblPowerUp.Text = "PowerUp:";
+            // 
+            // lblPowerUpTimer
+            // 
+            this.lblPowerUpTimer.AutoSize = true;
+            this.lblPowerUpTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.lblPowerUpTimer.Location = new System.Drawing.Point(839, 189);
+            this.lblPowerUpTimer.Name = "lblPowerUpTimer";
+            this.lblPowerUpTimer.Size = new System.Drawing.Size(142, 24);
+            this.lblPowerUpTimer.TabIndex = 7;
+            this.lblPowerUpTimer.Text = "PowerUpTimer:";
+            // 
             // GameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(994, 554);
+            this.ClientSize = new System.Drawing.Size(995, 554);
+            this.Controls.Add(this.lblPowerUpTimer);
+            this.Controls.Add(this.lblPowerUp);
             this.Controls.Add(this.btnSaveToDatabase);
             this.Controls.Add(this.lblPoints);
             this.Controls.Add(this.lblHealth);
@@ -141,6 +165,8 @@
         private System.Windows.Forms.Label lblHealth;
         private System.Windows.Forms.Label lblPoints;
         private System.Windows.Forms.Button btnSaveToDatabase;
+        private System.Windows.Forms.Label lblPowerUp;
+        private System.Windows.Forms.Label lblPowerUpTimer;
     }
 }
 

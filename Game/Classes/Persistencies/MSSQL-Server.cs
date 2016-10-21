@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using Game.Classes.Cells;
+using Game.Classes.Exceptions;
 
 namespace Game.Classes.Persistencies
 {
@@ -21,9 +22,16 @@ namespace Game.Classes.Persistencies
         // ----
         private void Connect()
         {
-            this.connString = "Server=mssql.fhict.local;Database=dbi327544;User Id=dbi327544;Password=PTS16;";
-            SQLcon = new SqlConnection(connString);
-            SQLcon.Open();
+            try
+            {
+                this.connString = "Server=mssql.fhict.local;Database=dbi327544;User Id=dbi327544;Password=PTS16;";
+                SQLcon = new SqlConnection(connString);
+                SQLcon.Open();
+            }
+            catch(Exception e)
+            {
+                throw new DatabaseConnectionException(e.Message);
+            }
         }
         private void Close()
         {
@@ -35,24 +43,31 @@ namespace Game.Classes.Persistencies
         {
             bool mapExists = false;
             Connect();
-            string query = "SELECT MapName FROM Cell WHERE Mapname = @Mapname";
-            using (command = new SqlCommand(query, SQLcon))
+            try
             {
-                command.Parameters.Add(new SqlParameter("@MapName", mapname));
-                reader = command.ExecuteReader();
+                string query = "SELECT MapName FROM Cell WHERE Mapname = @Mapname";
+                using (command = new SqlCommand(query, SQLcon))
+                {
+                    command.Parameters.Add(new SqlParameter("@MapName", mapname));
+                    reader = command.ExecuteReader();
 
-                while (reader.Read())
-                { 
-                    if(reader["MapName"].ToString() != null)
+                    while (reader.Read())
                     {
-                        mapExists = true;
-                    }
-                    else
-                    {
-                        mapExists = false;
-                        break;
+                        if (reader["MapName"].ToString() != null)
+                        {
+                            mapExists = true;
+                        }
+                        else
+                        {
+                            mapExists = false;
+                            break;
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                throw new Exceptions.QueryFailedException(e.Message);
             }
             Close();
             return mapExists;
@@ -64,15 +79,22 @@ namespace Game.Classes.Persistencies
             List<string> mapList = new List<string>();
 
             Connect();
-            string query = "SELECT DISTINCT(MapName) FROM Cell";
-            using (command = new SqlCommand(query, SQLcon))
+            try
             {
-                reader = command.ExecuteReader();
-
-                while (reader.Read())
+                string query = "SELECT DISTINCT(MapName) FROM Cell";
+                using (command = new SqlCommand(query, SQLcon))
                 {
-                    mapList.Add(reader["MapName"].ToString());
+                    reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        mapList.Add(reader["MapName"].ToString());
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                throw new Exceptions.QueryFailedException(e.Message);
             }
 
             Close();
@@ -84,20 +106,27 @@ namespace Game.Classes.Persistencies
             List<WallCell> wallCellList = new List<WallCell>();
 
             Connect();
-            string query = "SELECT * FROM Cell WHERE MapName = @MapName AND Wallcell = 1";
-            using (command = new SqlCommand(query, SQLcon))
+            try
             {
-                command.Parameters.Add(new SqlParameter("@MapName", mapName));
-                reader = command.ExecuteReader();
-
-                while (reader.Read())
+                string query = "SELECT * FROM Cell WHERE MapName = @MapName AND Wallcell = 1";
+                using (command = new SqlCommand(query, SQLcon))
                 {
-                    WallCell wc = new WallCell(ConvertDataToPoint(reader["Coordinaten"].ToString()),cellSize);
-                    wallCellList.Add(wc);
+                    command.Parameters.Add(new SqlParameter("@MapName", mapName));
+                    reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        WallCell wc = new WallCell(ConvertDataToPoint(reader["Coordinaten"].ToString()), cellSize);
+                        wallCellList.Add(wc);
+                    }
                 }
             }
-            Close();
+            catch (Exception e)
+            {
+                throw new Exceptions.QueryFailedException(e.Message);
+            }
 
+            Close();
             return wallCellList;
         }
 
@@ -106,17 +135,24 @@ namespace Game.Classes.Persistencies
             List<NormalCell> normalCellList = new List<NormalCell>();
 
             Connect();
-            string query = "SELECT * FROM Cell WHERE MapName = @MapName AND NormalCell = 1";
-            using (command = new SqlCommand(query, SQLcon))
+            try
             {
-                command.Parameters.Add(new SqlParameter("@MapName", mapName));
-                reader = command.ExecuteReader();
-
-                while (reader.Read())
+                string query = "SELECT * FROM Cell WHERE MapName = @MapName AND NormalCell = 1";
+                using (command = new SqlCommand(query, SQLcon))
                 {
-                    NormalCell wc = new NormalCell(ConvertDataToPoint(reader["Coordinaten"].ToString()), cellSize);
-                    normalCellList.Add(wc);
+                    command.Parameters.Add(new SqlParameter("@MapName", mapName));
+                    reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        NormalCell wc = new NormalCell(ConvertDataToPoint(reader["Coordinaten"].ToString()), cellSize);
+                        normalCellList.Add(wc);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                throw new Exceptions.QueryFailedException(e.Message);
             }
             Close();
 
@@ -126,25 +162,32 @@ namespace Game.Classes.Persistencies
         public void InsertMap(string mapName, List<Point> normalCellLocationList, List<Point> wallCellLocationList)
         {
             Connect();
-            foreach(Point p in normalCellLocationList)
+            try
             {
-                string query = "INSERT INTO Cell VALUES(@MapName, @Coordinaten, 1, 0)";
-                using (command = new SqlCommand(query, SQLcon))
+                foreach (Point p in normalCellLocationList)
                 {
-                    command.Parameters.Add(new SqlParameter("@MapName", mapName));
-                    command.Parameters.Add(new SqlParameter("@Coordinaten", p.ToString()));
-                    command.ExecuteNonQuery();
+                    string query = "INSERT INTO Cell VALUES(@MapName, @Coordinaten, 1, 0)";
+                    using (command = new SqlCommand(query, SQLcon))
+                    {
+                        command.Parameters.Add(new SqlParameter("@MapName", mapName));
+                        command.Parameters.Add(new SqlParameter("@Coordinaten", p.ToString()));
+                        command.ExecuteNonQuery();
+                    }
+                }
+                foreach (Point p in wallCellLocationList)
+                {
+                    string query = "INSERT INTO Cell VALUES(@MapName, @Coordinaten, 0, 1)";
+                    using (command = new SqlCommand(query, SQLcon))
+                    {
+                        command.Parameters.Add(new SqlParameter("@MapName", mapName));
+                        command.Parameters.Add(new SqlParameter("@Coordinaten", p.ToString()));
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
-            foreach(Point p in wallCellLocationList)
+            catch (Exception e)
             {
-                string query = "INSERT INTO Cell VALUES(@MapName, @Coordinaten, 0, 1)";
-                using (command = new SqlCommand(query, SQLcon))
-                {
-                    command.Parameters.Add(new SqlParameter("@MapName", mapName));
-                    command.Parameters.Add(new SqlParameter("@Coordinaten", p.ToString()));
-                    command.ExecuteNonQuery();
-                }
+                throw new Exceptions.QueryFailedException(e.Message);
             }
             Close();
         }

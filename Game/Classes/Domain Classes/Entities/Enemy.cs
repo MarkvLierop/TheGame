@@ -29,41 +29,51 @@ namespace Game.Classes
             {
                 case 0:
                     // Up
-                    LocationOnCell = world.Map.CellArray[x, y - 1];
+                    LocationOnCell = world.GetMapCellArray()[x, y - 1];
                     break;
                 case 1:
                     // Down
-                    LocationOnCell = world.Map.CellArray[x, y + 1];
+                    LocationOnCell = world.GetMapCellArray()[x, y + 1];
                     break;
                 case 2:
                     // Right
-                    LocationOnCell = world.Map.CellArray[x + 1, y];
+                    LocationOnCell = world.GetMapCellArray()[x + 1, y];
                     break;
                 case 3:
                     // Left
-                    LocationOnCell = world.Map.CellArray[x - 1, y];
+                    LocationOnCell = world.GetMapCellArray()[x - 1, y];
                     break;
             }
         }
         public override void DrawEntity(Graphics g)
         {
-            g.FillEllipse(Brushes.Red, new Rectangle(LocationOnCell.Location, world.Map.CellArray[0, 0].Size));
+            g.FillEllipse(Brushes.Red, new Rectangle(LocationOnCell.Location, world.GetMapCellArray()[0, 0].Size));
         }
         private int CheckForWalls(Random rand)
         {
-            // Checken of enemy naar de player mag bewegen.
-            if (!mogelijkeRichtingen.Contains(LookForPlayer(mogelijkeRichtingen[rand.Next(0, mogelijkeRichtingen.Count)])))
+            switch (world.Player.ActivePowerUp)
             {
-                // Zo niet dan willekeurige kant op gaan.
-                richting = mogelijkeRichtingen[rand.Next(0, mogelijkeRichtingen.Count)];
-            }
-            else
-            {
-                // Zo wel dan richting speler bewegen.
-                richting = LookForPlayer(mogelijkeRichtingen[rand.Next(0, mogelijkeRichtingen.Count)]);
+                // Als de player invisible is. Willekeurige kant op gaan.
+                case "Invisible":
+                    richting = mogelijkeRichtingen[rand.Next(0, mogelijkeRichtingen.Count)];
+                    break;
+                // zo niet, dan kijken of de speler in de buurt is.
+                default:
+                    // Checken of enemy naar de player mag bewegen.
+                    if (!mogelijkeRichtingen.Contains(LookForPlayer(mogelijkeRichtingen[rand.Next(0, mogelijkeRichtingen.Count)])))
+                    {
+                        // Zo niet dan willekeurige kant op gaan.
+                        richting = mogelijkeRichtingen[rand.Next(0, mogelijkeRichtingen.Count)];
+                    }
+                    else
+                    {
+                        // Zo wel dan richting speler bewegen.
+                        richting = LookForPlayer(mogelijkeRichtingen[rand.Next(0, mogelijkeRichtingen.Count)]);
+                    }
+                    break;
             }
 
-            // Check voor walls. Als er geen speler gevonden wordt. de gewone richting volgen.
+            // Check voor walls. Als er een wall tussen de speler en enemy bevindt, mogelijke richting verwijderen
             switch (richting)
             {
                 case 0:
@@ -71,7 +81,7 @@ namespace Game.Classes
                     if ((y - 1) >= 0)
                     {
                         // Kijken of er een wall boven is. Zo ja, dan UP als mogelijke richting verwijderen
-                        if (world.Map.CellArray[x, y - 1].GetType() == typeof(WallCell))
+                        if (world.GetMapCellArray()[x, y - 1].GetType() == typeof(WallCell))
                             goto case 4;
                     }
                     else
@@ -82,9 +92,9 @@ namespace Game.Classes
                     break;
                 case 1:
                     // Down
-                    if (y + 1 != world.Map.CellArray.GetLength(1))
+                    if (y + 1 != world.GetMapCellArray().GetLength(1))
                     {
-                        if (world.Map.CellArray[x, y + 1].GetType() == typeof(WallCell))
+                        if (world.GetMapCellArray()[x, y + 1].GetType() == typeof(WallCell))
                             goto case 4;
                     }
                     else
@@ -95,9 +105,9 @@ namespace Game.Classes
                     break;
                 case 2:
                     // Right
-                    if (x + 1 != world.Map.CellArray.GetLength(0))
+                    if (x + 1 != world.GetMapCellArray().GetLength(0))
                     {
-                        if (world.Map.CellArray[x + 1, y].GetType() == typeof(WallCell))
+                        if (world.GetMapCellArray()[x + 1, y].GetType() == typeof(WallCell))
                             goto case 4;
                     }
                     else
@@ -110,7 +120,7 @@ namespace Game.Classes
                     // Left
                     if ((x - 1) >= 0)
                     {
-                        if (world.Map.CellArray[x - 1, y].GetType() == typeof(WallCell))
+                        if (world.GetMapCellArray()[x - 1, y].GetType() == typeof(WallCell))
                             goto case 4;
                     }
                     else
@@ -124,11 +134,11 @@ namespace Game.Classes
                     CheckForWalls(rand);
                     break;
             }
-            RefillList();
+            RefillMogelijkeRichtingen();
             return richting;
         }
         // Lijst met mogelijke richtingen vullen;
-        private void RefillList()
+        private void RefillMogelijkeRichtingen()
         {
             mogelijkeRichtingen = new List<int> { 0, 1, 2, 3 };
         }
@@ -141,26 +151,26 @@ namespace Game.Classes
             {
                 for (int y= 0; y < aggroDistanceToPlayer; y++)
                 {
-                        if (base.x + x < world.Map.CellArray.GetLength(0) && 
-                            world.Map.CellArray[base.x + x, base.y] == world.Player.LocationOnCell)
+                        if (base.x + x < world.GetMapCellArray().GetLength(0) && 
+                            world.GetMapCellArray()[base.x + x, base.y] == world.Player.LocationOnCell)
                         {
                             // Rechts opgaan als daar de speler bevindt
                             return 2;
                         }
                         if (base.x - x >= 0 && 
-                            world.Map.CellArray[base.x - x, base.y] == world.Player.LocationOnCell)
+                            world.GetMapCellArray()[base.x - x, base.y] == world.Player.LocationOnCell)
                         {
                             // Links
                             return 3;
                         }
-                        if (base.y + y < world.Map.CellArray.GetLength(1) && 
-                            world.Map.CellArray[base.x, base.y + y] == world.Player.LocationOnCell)
+                        if (base.y + y < world.GetMapCellArray().GetLength(1) && 
+                            world.GetMapCellArray()[base.x, base.y + y] == world.Player.LocationOnCell)
                         {
                             // Down
                             return 1;
                         }
                         if (base.y - y >= 0 && 
-                            world.Map.CellArray[base.x, base.y - y] == world.Player.LocationOnCell)
+                            world.GetMapCellArray()[base.x, base.y - y] == world.Player.LocationOnCell)
                         {
                             // Up
                             return 0;

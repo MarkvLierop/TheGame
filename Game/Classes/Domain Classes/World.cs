@@ -20,7 +20,7 @@ namespace Game.Classes
         // ---
         public World()
         {
-            enemyCount = 10;
+            enemyCount = 4;
             EnemyList = new List<Entity>();
         }
 
@@ -52,6 +52,10 @@ namespace Game.Classes
                                                        rand.Next(0, Map.CellArray.GetLength(1))]);
                 EnemyList.Add(Enemy);
             }
+        }
+        public Cells.Cell[,] GetMapCellArray()
+        {
+            return Map.CellArray;
         }
     }
 }

@@ -34,6 +34,10 @@ namespace Forms
 
         private void btnStartGame_Click(object sender, EventArgs e)
         {
+            MessageBox.Show(" Yellow Circle = Enemies will not be able to damage the player."+
+                            "\n DarkRed Circle = Player HealthPoints + 1"+
+                            "\n White Circle = Enemies will not attack the player",
+                           "Power Up Information",MessageBoxButtons.OK,MessageBoxIcon.Asterisk);
             GameForm gForm = new GameForm(world, "File");
             ShowGameForm(gForm);
         }

@@ -60,7 +60,8 @@
     <Compile Include="Classes\Domain Classes\World.cs" />
     <Compile Include="Classes\Exceptions\CreateMapException.cs" />
     <Compile Include="Classes\Exceptions\NoMapFoundException.cs" />
-    <Compile Include="Classes\Exceptions\SaveMapException.cs" />
+    <Compile Include="Classes\Exceptions\DatabaseConnectionException.cs" />
+    <Compile Include="Classes\Exceptions\QueryFailedException.cs" />
     <Compile Include="Classes\Interfaces\IMap.cs" />
     <Compile Include="Classes\Persistencies\MSSQL-Server.cs" />
     <Compile Include="Classes\Repositories\MapRepository.cs" />

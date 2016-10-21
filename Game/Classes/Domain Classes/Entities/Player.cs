@@ -18,7 +18,7 @@ namespace Game.Classes
         {
             this.world = world;
 
-            LocationOnCell = world.Map.CellArray[0, 0];
+            LocationOnCell = world.GetMapCellArray()[0, 0];
             HealthPoints = 4;
             Points = 0;
         }
@@ -30,7 +30,7 @@ namespace Game.Classes
                 case Keys.Up:
                     if ((y - 1) >= 0)
                     {
-                        if (world.Map.CellArray[x, y - 1].GetType() == typeof(WallCell))
+                        if (world.GetMapCellArray()[x, y - 1].GetType() == typeof(WallCell))
                             return false;
                     }
                     else
@@ -39,9 +39,9 @@ namespace Game.Classes
                     }
                     break;
                 case Keys.Down:
-                    if (y + 1 != world.Map.CellArray.GetLength(1))
+                    if (y + 1 != world.GetMapCellArray().GetLength(1))
                     {
-                        if (world.Map.CellArray[x, y + 1].GetType() == typeof(WallCell))
+                        if (world.GetMapCellArray()[x, y + 1].GetType() == typeof(WallCell))
                             return false;
                     }
                     else
@@ -50,9 +50,9 @@ namespace Game.Classes
                     }
                     break;
                 case Keys.Right:
-                    if (x + 1 != world.Map.CellArray.GetLength(0))
+                    if (x + 1 != world.GetMapCellArray().GetLength(0))
                     {
-                        if (world.Map.CellArray[x + 1, y].GetType() == typeof(WallCell))
+                        if (world.GetMapCellArray()[x + 1, y].GetType() == typeof(WallCell))
                             return false;
                     }
                     else
@@ -63,7 +63,7 @@ namespace Game.Classes
                 case Keys.Left:
                     if ((x - 1) >= 0)
                     {
-                        if (world.Map.CellArray[x - 1, y].GetType() == typeof(WallCell))
+                        if (world.GetMapCellArray()[x - 1, y].GetType() == typeof(WallCell))
                             return false;
                     }
                     else
@@ -103,16 +103,16 @@ namespace Game.Classes
                 switch (pressedKey)
                 {
                     case Keys.Up:
-                        LocationOnCell = world.Map.CellArray[x, y - 1];
+                        LocationOnCell = world.GetMapCellArray()[x, y - 1];
                         break;
                     case Keys.Down:
-                        LocationOnCell = world.Map.CellArray[x, y + 1];
+                        LocationOnCell = world.GetMapCellArray()[x, y + 1];
                         break;
                     case Keys.Right:
-                        LocationOnCell = world.Map.CellArray[x + 1, y];
+                        LocationOnCell = world.GetMapCellArray()[x + 1, y];
                         break;
                     case Keys.Left:
-                        LocationOnCell = world.Map.CellArray[x - 1, y];
+                        LocationOnCell = world.GetMapCellArray()[x - 1, y];
                         break;
                 }
             }
@@ -120,13 +120,16 @@ namespace Game.Classes
         
         public bool CheckForDamage()
         {
-            foreach (Enemy e in world.EnemyList)
+            if(ActivePowerUp != "Invulnerable")
             {
-                // Kijken of de speler zich op dezelfde cell bevindt als een enemy
-                if (LocationOnCell == e.LocationOnCell)
+                foreach (Enemy e in world.EnemyList)
                 {
-                    HealthPoints -= 1;
-                    return true;
+                    // Kijken of de speler zich op dezelfde cell bevindt als een enemy
+                    if (LocationOnCell == e.LocationOnCell)
+                    {
+                        HealthPoints -= 1;
+                        return true;
+                    }
                 }
             }
             return false;
@@ -134,7 +137,7 @@ namespace Game.Classes
 
         public bool CheckIfGameWon()
         {
-            if (LocationOnCell == world.Map.CellArray[world.Map.CellArray.GetLength(0)-1, world.Map.CellArray.GetLength(1)-1])
+            if (LocationOnCell == world.GetMapCellArray()[world.GetMapCellArray().GetLength(0)-1, world.GetMapCellArray().GetLength(1)-1])
             {
                 Points++;
                 return true;
@@ -153,7 +156,7 @@ namespace Game.Classes
 
         public override void DrawEntity(Graphics g)
         {
-            g.FillEllipse(Brushes.Green, new Rectangle(LocationOnCell.Location, world.Map.CellArray[0, 0].Size));
+            g.FillEllipse(Brushes.Green, new Rectangle(LocationOnCell.Location, world.GetMapCellArray()[0, 0].Size));
         }
 
     }

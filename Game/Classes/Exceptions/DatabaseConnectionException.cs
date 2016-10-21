@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Game.Classes.Exceptions
 {
-    class SaveMapException : Exception
+    class DatabaseConnectionException : Exception
     {
-        public SaveMapException(string message) 
-            : base("Map could not be saved: " + message)
+        public DatabaseConnectionException(string message) 
+            : base("Database could not be contacted: " + message)
         {
         }
     }

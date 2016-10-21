@@ -23,7 +23,7 @@ namespace Game
         private bool createMap;
         private bool gameWon;
         private bool gameLost;
-        private int powerUpTimeCounter = 10;
+        private int powerUpTimeCounter = 0;
 
         // Voor Map creator
         public GameForm(World world, bool createMap)
@@ -37,7 +37,7 @@ namespace Game
             btnSaveToFile.Visible = true;
             btnSaveToDatabase.Visible = true;
             txtMapName.Visible = true;
-            foreach (Cell c in world.Map.CellArray)
+            foreach (Cell c in world.GetMapCellArray())
             {
                 PictureBox p = new PictureBox();
                 p.Location = c.Location;
@@ -68,7 +68,15 @@ namespace Game
             else if (from == "Database")
             {
                 // Connectie naar vdi.FHICT.nl Benodigd.
-                world.CreateMapFromDatabase();
+                try
+                {
+                    world.CreateMapFromDatabase();
+                }
+                catch (DatabaseConnectionException e)
+                {
+                    MessageBox.Show(e.Message);
+                    Application.Exit();
+                }
             }
             world.SpawnPlayer();         
             world.SpawnEnemies();
@@ -109,7 +117,7 @@ namespace Game
             if(!createMap)
             {
                 // Cells tekenen
-                foreach (Cell c in world.Map.CellArray)
+                foreach (Cell c in world.GetMapCellArray())
                 {
                     c.DrawCell(g, count);
                     count++;
@@ -156,15 +164,23 @@ namespace Game
             }
         }
 
-        // Speler bewegen
+        // Speler bewegen - Checken voor PowerUps.
         private void GameForm_KeyDown(object sender, KeyEventArgs e)
         {
             world.Player.MovePlayer(e.KeyCode);
 
             if(world.Player.PickUpPowerUp())
             {
-                lblHealth.Text = "Health Points: " + world.Player.HealthPoints.ToString();
-                tmrPowerUp.Enabled = true;
+                if(world.Player.ActivePowerUp == "Health")
+                {
+                    lblHealth.Text = "Health Points: " + world.Player.HealthPoints.ToString();
+                }
+                else
+                {
+                    tmrPowerUp.Enabled = true;
+                    lblPowerUp.Text = lblPowerUp.Text + "\n" + world.Player.ActivePowerUp;
+                    lblPowerUp.Font = new Font(lblPowerUp.Font, FontStyle.Underline);
+                }
             }
             Refresh();
         }
@@ -266,11 +282,19 @@ namespace Game
             }
         }
 
+        // Timer die bijhoudt hoe lang powerup active mag blijven.
         private void tmrPowerUp_Tick(object sender, EventArgs e)
         {
+            powerUpTimeCounter++;
+
+            lblPowerUpTimer.Text = "PowerUpTimer:\n"+ powerUpTimeCounter.ToString();
             if(powerUpTimeCounter == 10)
             {
+                lblPowerUp.Text = "PowerUp:";
+                lblPowerUpTimer.Text = "PowerUpTimer:";
+                lblPowerUp.Font = new Font(lblPowerUp.Font, FontStyle.Regular);
                 tmrPowerUp.Enabled = false;
+                world.Player.ActivePowerUp = null;
                 powerUpTimeCounter = 0;
             }
         }
