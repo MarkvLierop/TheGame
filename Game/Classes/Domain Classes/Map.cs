@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Game.Classes
 {
-    class Map
+    public class Map
     {
         private World world;
         private Cells.Cell Cell;
@@ -59,7 +59,7 @@ namespace Game.Classes
             {
                 CellArray[wallcellList[i].Location.X / CellSize.Width, wallcellList[i].Location.Y / CellSize.Height] = wallcellList[i];
             }
-            //SpawnPowerUps();
+            SpawnPowerUps();
         }
         public void CreateMapFromFile()
         {
@@ -89,8 +89,7 @@ namespace Game.Classes
             {
                 throw new Exceptions.CreateMapException(e.Message);
             }
-
-            //SpawnPowerUps();
+            SpawnPowerUps();
         }
 
         public void DrawEndGameText(Graphics g, int width, int height, bool gameWon)

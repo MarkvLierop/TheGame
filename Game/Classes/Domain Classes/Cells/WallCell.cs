@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Game.Classes
 {
-    class WallCell : Cells.Cell
+    public class WallCell : Cells.Cell
     {
         public WallCell(Point p, Size s) 
             : base(p, s)

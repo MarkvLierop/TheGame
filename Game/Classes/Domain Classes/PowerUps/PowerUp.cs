@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Game.Classes
 {
-    abstract class PowerUp
+    public abstract class PowerUp
     {
         protected World world;
         public Cells.Cell Cell { get; set; }        

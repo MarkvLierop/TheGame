@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -50,11 +51,16 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="TestEnemy.cs" />
     <Compile Include="TestMap.cs" />
     <Compile Include="TestPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GameClasses\GameClasses.csproj">
+      <Project>{bc88d622-a6c3-4516-8b83-8aa215cf4e06}</Project>
+      <Name>GameClasses</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Game\Game.csproj">
       <Project>{73ed10a0-8355-424a-baed-9933076c3d76}</Project>
       <Name>Game</Name>

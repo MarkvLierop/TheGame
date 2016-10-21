@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Game.Classes
 {
-    class Player : Entity
+    public class Player : Entity
     {
         public int HealthPoints { get; set; }
         public int Points { get; set; }
@@ -18,7 +18,7 @@ namespace Game.Classes
         {
             this.world = world;
 
-            Cell = world.Map.CellArray[0, 0];
+            LocationOnCell = world.Map.CellArray[0, 0];
             HealthPoints = 4;
             Points = 0;
         }
@@ -75,6 +75,23 @@ namespace Game.Classes
             return true;
         }
 
+        public bool PickUpPowerUp()
+        {
+            // Kijken of er een powerup aangeraakt wordt
+            foreach (PowerUp pu in world.Map.PowerUpsOnMapList)
+            {
+                if (LocationOnCell == pu.Cell)
+                {
+                    ActivePowerUp = pu.Effect;
+                    if (pu.Effect == "Health")
+                        HealthPoints += 1;
+                    world.Map.PowerUpsOnMapList.Remove(pu);
+                    return true;
+                }
+            }
+            return false;
+        }
+        // Positie opvragen, speler bewegen als er geen wall bevindt op die locatie.
         public void MovePlayer(Keys pressedKey)
         {
             GetPosition();
@@ -86,16 +103,16 @@ namespace Game.Classes
                 switch (pressedKey)
                 {
                     case Keys.Up:
-                        Cell = world.Map.CellArray[x, y - 1];
+                        LocationOnCell = world.Map.CellArray[x, y - 1];
                         break;
                     case Keys.Down:
-                        Cell = world.Map.CellArray[x, y + 1];
+                        LocationOnCell = world.Map.CellArray[x, y + 1];
                         break;
                     case Keys.Right:
-                        Cell = world.Map.CellArray[x + 1, y];
+                        LocationOnCell = world.Map.CellArray[x + 1, y];
                         break;
                     case Keys.Left:
-                        Cell = world.Map.CellArray[x - 1, y];
+                        LocationOnCell = world.Map.CellArray[x - 1, y];
                         break;
                 }
             }
@@ -106,7 +123,7 @@ namespace Game.Classes
             foreach (Enemy e in world.EnemyList)
             {
                 // Kijken of de speler zich op dezelfde cell bevindt als een enemy
-                if (Cell == e.Cell)
+                if (LocationOnCell == e.LocationOnCell)
                 {
                     HealthPoints -= 1;
                     return true;
@@ -117,7 +134,7 @@ namespace Game.Classes
 
         public bool CheckIfGameWon()
         {
-            if (Cell == world.Map.CellArray[world.Map.CellArray.GetLength(0)-1, world.Map.CellArray.GetLength(1)-1])
+            if (LocationOnCell == world.Map.CellArray[world.Map.CellArray.GetLength(0)-1, world.Map.CellArray.GetLength(1)-1])
             {
                 Points++;
                 return true;
@@ -136,7 +153,7 @@ namespace Game.Classes
 
         public override void DrawEntity(Graphics g)
         {
-            g.FillEllipse(Brushes.Green, new Rectangle(Cell.Location, world.Map.CellArray[0, 0].Size));
+            g.FillEllipse(Brushes.Green, new Rectangle(LocationOnCell.Location, world.Map.CellArray[0, 0].Size));
         }
 
     }

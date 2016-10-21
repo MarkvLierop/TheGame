@@ -31,9 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.pbGameField = new System.Windows.Forms.PictureBox();
             this.tmrGameTimer = new System.Windows.Forms.Timer(this.components);
-            this.tmrPUSpeed = new System.Windows.Forms.Timer(this.components);
-            this.tmrPUInvisible = new System.Windows.Forms.Timer(this.components);
-            this.tmrPUInvulnerable = new System.Windows.Forms.Timer(this.components);
+            this.tmrPowerUp = new System.Windows.Forms.Timer(this.components);
             this.btnSaveToFile = new System.Windows.Forms.Button();
             this.txtMapName = new System.Windows.Forms.TextBox();
             this.lblHealth = new System.Windows.Forms.Label();
@@ -56,9 +54,10 @@
             this.tmrGameTimer.Interval = 300;
             this.tmrGameTimer.Tick += new System.EventHandler(this.tmrGameTimer_Tick);
             // 
-            // tmrPUSpeed
+            // tmrPowerUp
             // 
-            this.tmrPUSpeed.Tick += new System.EventHandler(this.tmrPUSpeed_Tick);
+            this.tmrPowerUp.Interval = 1000;
+            this.tmrPowerUp.Tick += new System.EventHandler(this.tmrPowerUp_Tick);
             // 
             // btnSaveToFile
             // 
@@ -136,9 +135,7 @@
 
         private System.Windows.Forms.PictureBox pbGameField;
         private System.Windows.Forms.Timer tmrGameTimer;
-        private System.Windows.Forms.Timer tmrPUSpeed;
-        private System.Windows.Forms.Timer tmrPUInvisible;
-        private System.Windows.Forms.Timer tmrPUInvulnerable;
+        private System.Windows.Forms.Timer tmrPowerUp;
         private System.Windows.Forms.Button btnSaveToFile;
         private System.Windows.Forms.TextBox txtMapName;
         private System.Windows.Forms.Label lblHealth;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Game.Classes.PowerUps
 {
-    class PUInvulnerable : PowerUp
+    public class PUInvulnerable : PowerUp
     {
         public PUInvulnerable(World world) 
             : base(world)

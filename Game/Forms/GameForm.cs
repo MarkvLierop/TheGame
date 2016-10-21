@@ -23,6 +23,7 @@ namespace Game
         private bool createMap;
         private bool gameWon;
         private bool gameLost;
+        private int powerUpTimeCounter = 10;
 
         // Voor Map creator
         public GameForm(World world, bool createMap)
@@ -159,6 +160,12 @@ namespace Game
         private void GameForm_KeyDown(object sender, KeyEventArgs e)
         {
             world.Player.MovePlayer(e.KeyCode);
+
+            if(world.Player.PickUpPowerUp())
+            {
+                lblHealth.Text = "Health Points: " + world.Player.HealthPoints.ToString();
+                tmrPowerUp.Enabled = true;
+            }
             Refresh();
         }
 
@@ -256,6 +263,15 @@ namespace Game
                     }
                     swSaveCells.Close();
                 }
+            }
+        }
+
+        private void tmrPowerUp_Tick(object sender, EventArgs e)
+        {
+            if(powerUpTimeCounter == 10)
+            {
+                tmrPowerUp.Enabled = false;
+                powerUpTimeCounter = 0;
             }
         }
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Game.Classes
 {
-    class PUInvisible : PowerUp
+    public class PUInvisible : PowerUp
     {
         public PUInvisible(World world) 
             :  base(world)

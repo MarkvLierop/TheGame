@@ -8,13 +8,13 @@ using System.Windows.Forms;
 
 namespace Game.Classes
 {
-    abstract class Entity
+    public abstract class Entity
     {
         private Size size = new Size(30, 30);
         protected World world;
         protected int x, y;
 
-        public Cells.Cell Cell { get; set; }
+        public Cells.Cell LocationOnCell { get; set; }
 
 
         public abstract void DrawEntity(Graphics g);
@@ -29,14 +29,16 @@ namespace Game.Classes
             {
                 for (int Yaxis = 0; Yaxis < y; Yaxis++)
                 {
-                    if (world.Map.CellArray[Xaxis, Yaxis] == Cell)
+                    if (world.Map.CellArray[Xaxis, Yaxis] == LocationOnCell)
                     {
                         x = Xaxis;
                         y = Yaxis;
-                        break;
+                        // Gevonden? Exit nested loop
+                        goto Found;
                     }
                 }
             }
+            Found:;
         }
     }
 }

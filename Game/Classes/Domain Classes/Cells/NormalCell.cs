@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Game.Classes
 {
-    class NormalCell : Cells.Cell
+    public class NormalCell : Cells.Cell
     {
 
         public NormalCell(Point p, Size z) 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Game.Classes
 {
-    class Enemy : Entity
+    public class Enemy : Entity
     {
         // Fields
         private int richting;
@@ -18,7 +18,7 @@ namespace Game.Classes
         public Enemy(World world, Cells.Cell cell)
         {
             this.world = world;
-            Cell = cell;
+            LocationOnCell = cell;
         }
         public void MoveEnemy(Random rand)
         {
@@ -29,25 +29,25 @@ namespace Game.Classes
             {
                 case 0:
                     // Up
-                    Cell = world.Map.CellArray[x, y - 1];
+                    LocationOnCell = world.Map.CellArray[x, y - 1];
                     break;
                 case 1:
                     // Down
-                    Cell = world.Map.CellArray[x, y + 1];
+                    LocationOnCell = world.Map.CellArray[x, y + 1];
                     break;
                 case 2:
                     // Right
-                    Cell = world.Map.CellArray[x + 1, y];
+                    LocationOnCell = world.Map.CellArray[x + 1, y];
                     break;
                 case 3:
                     // Left
-                    Cell = world.Map.CellArray[x - 1, y];
+                    LocationOnCell = world.Map.CellArray[x - 1, y];
                     break;
             }
         }
         public override void DrawEntity(Graphics g)
         {
-            g.FillEllipse(Brushes.Red, new Rectangle(Cell.Location, world.Map.CellArray[0, 0].Size));
+            g.FillEllipse(Brushes.Red, new Rectangle(LocationOnCell.Location, world.Map.CellArray[0, 0].Size));
         }
         private int CheckForWalls(Random rand)
         {
@@ -67,10 +67,10 @@ namespace Game.Classes
             switch (richting)
             {
                 case 0:
-                    // Up
+                    // Up -- Checken of er niet buiten de map (CellArray) verplaatst gaat worden
                     if ((y - 1) >= 0)
                     {
-                        // Kijken of er een wall boven is. Zo ja, dan up als mogelijke richting verwijderen
+                        // Kijken of er een wall boven is. Zo ja, dan UP als mogelijke richting verwijderen
                         if (world.Map.CellArray[x, y - 1].GetType() == typeof(WallCell))
                             goto case 4;
                     }
@@ -132,35 +132,35 @@ namespace Game.Classes
         {
             mogelijkeRichtingen = new List<int> { 0, 1, 2, 3 };
         }
-        private int LookForPlayer(int richting)
+        public int LookForPlayer(int richting)
         {
-            int distanceToPlayer = 6;
+            int aggroDistanceToPlayer = 6;
 
             // Als de speler niet gevonden wordt. De gewone richting volgen.
-            for (int x = 0; x < distanceToPlayer; x++)
+            for (int x = 0; x < aggroDistanceToPlayer; x++)
             {
-                for (int y= 0; y < distanceToPlayer; y++)
+                for (int y= 0; y < aggroDistanceToPlayer; y++)
                 {
                         if (base.x + x < world.Map.CellArray.GetLength(0) && 
-                            world.Map.CellArray[base.x + x, base.y] == world.Player.Cell)
+                            world.Map.CellArray[base.x + x, base.y] == world.Player.LocationOnCell)
                         {
                             // Rechts opgaan als daar de speler bevindt
                             return 2;
                         }
                         if (base.x - x >= 0 && 
-                            world.Map.CellArray[base.x - x, base.y] == world.Player.Cell)
+                            world.Map.CellArray[base.x - x, base.y] == world.Player.LocationOnCell)
                         {
                             // Links
                             return 3;
                         }
                         if (base.y + y < world.Map.CellArray.GetLength(1) && 
-                            world.Map.CellArray[base.x, base.y + y] == world.Player.Cell)
+                            world.Map.CellArray[base.x, base.y + y] == world.Player.LocationOnCell)
                         {
                             // Down
                             return 1;
                         }
                         if (base.y - y >= 0 && 
-                            world.Map.CellArray[base.x, base.y - y] == world.Player.Cell)
+                            world.Map.CellArray[base.x, base.y - y] == world.Player.LocationOnCell)
                         {
                             // Up
                             return 0;

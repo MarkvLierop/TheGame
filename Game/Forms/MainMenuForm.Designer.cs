@@ -70,7 +70,7 @@
             this.btnStartGameFromDatabase.Name = "btnStartGameFromDatabase";
             this.btnStartGameFromDatabase.Size = new System.Drawing.Size(383, 54);
             this.btnStartGameFromDatabase.TabIndex = 6;
-            this.btnStartGameFromDatabase.Text = "Start Game From Database";
+            this.btnStartGameFromDatabase.Text = "Start Game From Database\r\n(Connectie naar vdi.fhict.nl benodigd)";
             this.btnStartGameFromDatabase.UseVisualStyleBackColor = true;
             this.btnStartGameFromDatabase.Click += new System.EventHandler(this.btnCreateFromDatabase_Click);
             // 

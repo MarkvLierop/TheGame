@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Game.Classes.Cells
 {
-    abstract class Cell
+    public abstract class Cell
     {
-        public Size Size { get; }
+        public Size Size { get; protected set; }
         public Point Location { get; set; }
 
         public Cell(Point p, Size s)

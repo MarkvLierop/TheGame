@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Game.Classes
 {
-    class PUHealth : PowerUp
+    public class PUHealth : PowerUp
     {
         public PUHealth(World world) :base(world)
         {
@@ -17,6 +17,8 @@ namespace Game.Classes
         public override void DrawPowerUp(Graphics g)
         {
             g.FillEllipse(Brushes.DarkRed, new Rectangle(Cell.Location, Cell.Size));
+            g.DrawString("HP", new Font("Arial", Cell.Size.Width / 2), Brushes.Black, 
+                new Point(Cell.Location.X + (Cell.Size.Width / 10), Cell.Location.Y + (Cell.Size.Height / 10)));
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Game.Classes
 {
-    class World
+    public class World
     {
         // Fields
         private int enemyCount;
