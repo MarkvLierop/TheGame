@@ -34,7 +34,7 @@ namespace Forms
 
         private void btnStartGame_Click(object sender, EventArgs e)
         {
-            GameForm gForm = new GameForm(world);
+            GameForm gForm = new GameForm(world, "File");
             ShowGameForm(gForm);
         }
 
@@ -51,6 +51,12 @@ namespace Forms
         private void btnCreateMap_Click(object sender, EventArgs e)
         {
             GameForm gForm = new GameForm(world, true);
+            ShowGameForm(gForm);
+        }
+
+        private void btnCreateFromDatabase_Click(object sender, EventArgs e)
+        {
+            GameForm gForm = new GameForm(world, "Database");
             ShowGameForm(gForm);
         }
     }

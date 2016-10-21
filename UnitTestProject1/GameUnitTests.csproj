@@ -54,6 +54,12 @@
     <Compile Include="TestPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Game\Game.csproj">
+      <Project>{73ed10a0-8355-424a-baed-9933076c3d76}</Project>
+      <Name>Game</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

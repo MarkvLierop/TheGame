@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game", "Game\Game.csproj", 
 EndProject
 Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "ClassDiagram", "ClassDiagram\ClassDiagram.modelproj", "{FA962DB2-F012-4D50-ABE6-F92F5567F487}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameUnitTest", "UnitTestProject1\GameUnitTest.csproj", "{EC846259-117E-4FA9-BB09-FCAE592A0903}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameUnitTests", "UnitTestProject1\GameUnitTests.csproj", "{EC846259-117E-4FA9-BB09-FCAE592A0903}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

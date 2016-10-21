@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-namespace UnitTestProject1
+namespace UnitTestProject
 {
     [TestClass]
     public class TestMap

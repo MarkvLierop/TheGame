@@ -34,7 +34,8 @@ namespace Game.Classes.Persistencies
         public bool CheckIfMapNameExists(string mapname)
         {
             bool mapExists = false;
-            string query = "SELECT MapName FROM Cells WHERE Mapname = @Mapname";
+            Connect();
+            string query = "SELECT MapName FROM Cell WHERE Mapname = @Mapname";
             using (command = new SqlCommand(query, SQLcon))
             {
                 command.Parameters.Add(new SqlParameter("@MapName", mapname));
@@ -53,6 +54,7 @@ namespace Game.Classes.Persistencies
                     }
                 }
             }
+            Close();
             return mapExists;
         }
 
@@ -61,7 +63,8 @@ namespace Game.Classes.Persistencies
             Random rand = new Random();
             List<string> mapList = new List<string>();
 
-            string query = "SELECT DISTINCT(MapName) FROM Cells";
+            Connect();
+            string query = "SELECT DISTINCT(MapName) FROM Cell";
             using (command = new SqlCommand(query, SQLcon))
             {
                 reader = command.ExecuteReader();
@@ -72,6 +75,7 @@ namespace Game.Classes.Persistencies
                 }
             }
 
+            Close();
             return mapList[rand.Next(0, mapList.Count)];
         }
 
@@ -80,10 +84,10 @@ namespace Game.Classes.Persistencies
             List<WallCell> wallCellList = new List<WallCell>();
 
             Connect();
-            string query = "SELECT * FROM Cells WHERE MapName = @MapName AND Wallcell = 1";
+            string query = "SELECT * FROM Cell WHERE MapName = @MapName AND Wallcell = 1";
             using (command = new SqlCommand(query, SQLcon))
             {
-                command.Parameters.Add(new SqlParameter("@MapName", GetRandomMap()));
+                command.Parameters.Add(new SqlParameter("@MapName", mapName));
                 reader = command.ExecuteReader();
 
                 while (reader.Read())
@@ -102,10 +106,10 @@ namespace Game.Classes.Persistencies
             List<NormalCell> normalCellList = new List<NormalCell>();
 
             Connect();
-            string query = "SELECT * FROM Cells WHERE MapName = @MapName AND NormalCell = 1";
+            string query = "SELECT * FROM Cell WHERE MapName = @MapName AND NormalCell = 1";
             using (command = new SqlCommand(query, SQLcon))
             {
-                command.Parameters.Add(new SqlParameter("@MapName", GetRandomMap()));
+                command.Parameters.Add(new SqlParameter("@MapName", mapName));
                 reader = command.ExecuteReader();
 
                 while (reader.Read())
@@ -119,6 +123,31 @@ namespace Game.Classes.Persistencies
             return normalCellList;
         }
 
+        public void InsertMap(string mapName, List<Point> normalCellLocationList, List<Point> wallCellLocationList)
+        {
+            Connect();
+            foreach(Point p in normalCellLocationList)
+            {
+                string query = "INSERT INTO Cell VALUES(@MapName, @Coordinaten, 1, 0)";
+                using (command = new SqlCommand(query, SQLcon))
+                {
+                    command.Parameters.Add(new SqlParameter("@MapName", mapName));
+                    command.Parameters.Add(new SqlParameter("@Coordinaten", p.ToString()));
+                    command.ExecuteNonQuery();
+                }
+            }
+            foreach(Point p in wallCellLocationList)
+            {
+                string query = "INSERT INTO Cell VALUES(@MapName, @Coordinaten, 0, 1)";
+                using (command = new SqlCommand(query, SQLcon))
+                {
+                    command.Parameters.Add(new SqlParameter("@MapName", mapName));
+                    command.Parameters.Add(new SqlParameter("@Coordinaten", p.ToString()));
+                    command.ExecuteNonQuery();
+                }
+            }
+            Close();
+        }
         private Point ConvertDataToPoint(string line)
         {
             string[] Punt = line.Split(',');

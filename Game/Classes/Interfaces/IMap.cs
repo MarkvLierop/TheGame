@@ -9,5 +9,6 @@ namespace Game.Classes.Interfaces
         bool CheckIfMapNameExists(string mapName);
         List<WallCell> GetWallCells(string mapName, Size cellSize);
         List<NormalCell> GetNormalCells(string mapName, Size cellSize);
+        void InsertMap(string mapName, List<Point> normalCellLocationList, List<Point> wallCellLocationList);
     }
 }

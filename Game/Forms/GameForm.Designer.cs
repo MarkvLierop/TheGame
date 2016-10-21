@@ -34,10 +34,11 @@
             this.tmrPUSpeed = new System.Windows.Forms.Timer(this.components);
             this.tmrPUInvisible = new System.Windows.Forms.Timer(this.components);
             this.tmrPUInvulnerable = new System.Windows.Forms.Timer(this.components);
-            this.btnSave = new System.Windows.Forms.Button();
+            this.btnSaveToFile = new System.Windows.Forms.Button();
             this.txtMapName = new System.Windows.Forms.TextBox();
             this.lblHealth = new System.Windows.Forms.Label();
             this.lblPoints = new System.Windows.Forms.Label();
+            this.btnSaveToDatabase = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbGameField)).BeginInit();
             this.SuspendLayout();
             // 
@@ -59,22 +60,22 @@
             // 
             this.tmrPUSpeed.Tick += new System.EventHandler(this.tmrPUSpeed_Tick);
             // 
-            // btnSave
+            // btnSaveToFile
             // 
-            this.btnSave.Location = new System.Drawing.Point(843, 476);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 1;
-            this.btnSave.Text = "Save map";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Visible = false;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            this.btnSaveToFile.Location = new System.Drawing.Point(843, 457);
+            this.btnSaveToFile.Name = "btnSaveToFile";
+            this.btnSaveToFile.Size = new System.Drawing.Size(139, 23);
+            this.btnSaveToFile.TabIndex = 1;
+            this.btnSaveToFile.Text = "Save Map To File";
+            this.btnSaveToFile.UseVisualStyleBackColor = true;
+            this.btnSaveToFile.Visible = false;
+            this.btnSaveToFile.Click += new System.EventHandler(this.btnSaveToFile_Click);
             // 
             // txtMapName
             // 
-            this.txtMapName.Location = new System.Drawing.Point(843, 505);
+            this.txtMapName.Location = new System.Drawing.Point(843, 420);
             this.txtMapName.Name = "txtMapName";
-            this.txtMapName.Size = new System.Drawing.Size(100, 20);
+            this.txtMapName.Size = new System.Drawing.Size(139, 20);
             this.txtMapName.TabIndex = 2;
             this.txtMapName.Visible = false;
             // 
@@ -98,15 +99,27 @@
             this.lblPoints.TabIndex = 4;
             this.lblPoints.Text = "Points:";
             // 
+            // btnSaveToDatabase
+            // 
+            this.btnSaveToDatabase.Location = new System.Drawing.Point(843, 501);
+            this.btnSaveToDatabase.Name = "btnSaveToDatabase";
+            this.btnSaveToDatabase.Size = new System.Drawing.Size(139, 23);
+            this.btnSaveToDatabase.TabIndex = 5;
+            this.btnSaveToDatabase.Text = "Save Map To Database";
+            this.btnSaveToDatabase.UseVisualStyleBackColor = true;
+            this.btnSaveToDatabase.Visible = false;
+            this.btnSaveToDatabase.Click += new System.EventHandler(this.btnSaveToDatabase_Click);
+            // 
             // GameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(994, 554);
+            this.Controls.Add(this.btnSaveToDatabase);
             this.Controls.Add(this.lblPoints);
             this.Controls.Add(this.lblHealth);
             this.Controls.Add(this.txtMapName);
-            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.btnSaveToFile);
             this.Controls.Add(this.pbGameField);
             this.DoubleBuffered = true;
             this.Name = "GameForm";
@@ -126,10 +139,11 @@
         private System.Windows.Forms.Timer tmrPUSpeed;
         private System.Windows.Forms.Timer tmrPUInvisible;
         private System.Windows.Forms.Timer tmrPUInvulnerable;
-        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnSaveToFile;
         private System.Windows.Forms.TextBox txtMapName;
         private System.Windows.Forms.Label lblHealth;
         private System.Windows.Forms.Label lblPoints;
+        private System.Windows.Forms.Button btnSaveToDatabase;
     }
 }
 

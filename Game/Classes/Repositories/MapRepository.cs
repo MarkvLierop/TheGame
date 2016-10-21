@@ -36,5 +36,10 @@ namespace Game.Classes.Repositories
         {
             return iMap.GetWallCells(mapname, cellSize);
         }
+
+        public void SaveMapToDatabase(string mapName, List<Point> normalCellList, List<Point> wallCellList)
+        {
+            iMap.InsertMap(mapName, normalCellList, wallCellList);
+        }
     }
 }

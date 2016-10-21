@@ -1,6 +1,8 @@
 ﻿using Game.Classes;
 using Game.Classes.Cells;
 using Game.Classes.Exceptions;
+using Game.Classes.Persistencies;
+using Game.Classes.Repositories;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -31,7 +33,8 @@ namespace Game
 
             world.CreateBlankMap();
 
-            btnSave.Visible = true;
+            btnSaveToFile.Visible = true;
+            btnSaveToDatabase.Visible = true;
             txtMapName.Visible = true;
             foreach (Cell c in world.Map.CellArray)
             {
@@ -44,19 +47,27 @@ namespace Game
             }
         }
         // Voor normal game.
-        public GameForm(World world)
+        public GameForm(World world, string from)
         {
             InitializeComponent();
             this.world = world;
 
-            try
+            if(from == "File")
             {
-                world.CreateMapFromFile();
+                try
+                {
+                    world.CreateMapFromFile();
+                }
+                catch (CreateMapException e)
+                {
+                    MessageBox.Show(e.Message);
+                    Application.Exit();
+                }
             }
-            catch (CreateMapException e)
+            else if (from == "Database")
             {
-                MessageBox.Show(e.Message);
-                Application.Exit();
+                // Connectie naar vdi.FHICT.nl Benodigd.
+                world.CreateMapFromDatabase();
             }
             world.SpawnPlayer();         
             world.SpawnEnemies();
@@ -128,7 +139,7 @@ namespace Game
             }
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void btnSaveToFile_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(txtMapName.Text))
             {
@@ -143,10 +154,10 @@ namespace Game
                 }
             }
         }
-        
+
+        // Speler bewegen
         private void GameForm_KeyDown(object sender, KeyEventArgs e)
         {
-            // Speler bewegen
             world.Player.MovePlayer(e.KeyCode);
             Refresh();
         }
@@ -177,6 +188,30 @@ namespace Game
                 EndGame();
             }
             Refresh();
+        }
+
+        private void btnSaveToDatabase_Click(object sender, EventArgs e)
+        {
+            MapRepository maprepo = new MapRepository(new MSSQL_Server());
+            List<Point> normallCellPointList = new List<Point>();
+            List<Point> wallCelLPointList = new List<Point>();
+
+            foreach (PictureBox pb in pbGameField.Controls)
+            {
+                if (pb.BackColor == Color.Blue)
+                {
+                    normallCellPointList.Add(pb.Location);
+                }
+            }
+            foreach (PictureBox pb in pbGameField.Controls)
+            {
+                if (pb.BackColor == Color.Black)
+                {
+                    wallCelLPointList.Add(pb.Location);
+                }
+            }
+            maprepo.SaveMapToDatabase(txtMapName.Text, normallCellPointList, wallCelLPointList);
+            MessageBox.Show("Map Opgeslagen");
         }
         // Gametimer & eventhandler voor keypress stoppen
         private void EndGame()
@@ -222,10 +257,6 @@ namespace Game
                     swSaveCells.Close();
                 }
             }
-        }
-        private void SaveMapToDatabase()
-        {
-
         }
     }
 }
